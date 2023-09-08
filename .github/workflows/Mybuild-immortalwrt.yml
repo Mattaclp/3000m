@@ -15,8 +15,8 @@ permissions: write-all
 
 on:
   repository_dispatch:
-  schedule:
-   - cron: 0 19 * * 0
+#  schedule:
+#   - cron: 0 19 * * 0
    # 分,时,日,月,星期。每周日 19 时执行一次 (UTC时间)
   workflow_dispatch:
     inputs:
@@ -44,24 +44,6 @@ jobs:
     steps:
     - name: 检查
       uses: actions/checkout@main
-
-    - name: 检查服务器配置
-      run: |
-        echo "警告⚠"
-        echo "若分配的服务器性能不足，务必及时取消，重新运行！"
-        echo "已知编译成功CPU型号：8370C,8171M"
-        echo "已知性能不足CPU型号：8272CL,E5系列"
-        echo "--------------------------CPU信息--------------------------"
-        echo "CPU物理数量:$(cat /proc/cpuinfo| grep "physical id"| sort| uniq| wc -l)"
-        echo -e "CPU核心及版本信息：$(cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c) \n"
-        echo "--------------------------内存信息--------------------------"
-        echo "已安装内存详细信息："
-        sudo lshw -short -C memory | grep GiB
-        echo -e "\n"
-        echo "--------------------------硬盘信息--------------------------"
-        echo -e  "硬盘数量：$(ls /dev/sd* | grep -v [1-9] | wc -l) \n"
-        echo "硬盘详情："
-        df -Th
 
     - name: 初始化环境
       env:
@@ -108,7 +90,6 @@ jobs:
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --global user.name "github-actions[bot]"
         git am $GITHUB_WORKSPACE/patches/*.patch
-        chmod +x $GITHUB_WORKSPACE/$CLASH_CORE && $GITHUB_WORKSPACE/$CLASH_CORE
         make defconfig
         make download -j8 V=10
         find dl -size -1024c -exec ls -l {} \;
