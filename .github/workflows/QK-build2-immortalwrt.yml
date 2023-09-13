@@ -100,7 +100,7 @@ jobs:
     - name: 导入补丁和配置 & 下载文件
       run: |
         [ -e files ] && mv files openwrt/files
-        cat configs/QK-rax3000m-emmc.config >> openwrt/.config
+        cat configs/QK-rax3000m-emmc-master.config >> openwrt/.config
         cd openwrt
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --global user.name "github-actions[bot]"
